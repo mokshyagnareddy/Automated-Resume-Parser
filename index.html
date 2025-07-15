@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resume Parser</title>
+  <style>
+    /* Basic styling for the page */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f0f0f0;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1 {
+      color: #4a4a4a;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Form styling */
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    input[type="file"] {
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 300px;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Result box styling */
+    .result {
+      margin-top: 1rem;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .error {
+      color: red;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    li:last-child {
+      border-bottom: none;
+    }
+
+    strong {
+      color: #007bff;
+    }
+
+    /* Sublist styling */
+    ul ul {
+      margin-top: 0.5rem;
+      padding-left: 1rem;
+      background: #f9f9f9;
+      border-left: 2px solid #007bff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload Resume (PDF)</h1>
+
+  <!-- Upload Form -->
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="resume" accept=".pdf" required />
+    <button type="submit">Parse</button>
+  </form>
+
+  <!-- Display error message if any -->
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  <!-- Display parsed data if available -->
+  {% if parsed_data %}
+    <div class="result">
+      <h3>Parsed Resume Data:</h3>
+      <ul>
+        {% for key, value in parsed_data.items() %}
+          <li><strong>{{ key.capitalize() }}:</strong>
+            {% if value is iterable and not value is string %}
+              <!-- If value is a list, show as sublist -->
+              <ul>
+                {% for item in value %}
+                  <li>{{ item }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <!-- If a simple string, just show -->
+              {{ value }}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</body>
+</html>
